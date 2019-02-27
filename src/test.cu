@@ -1,15 +1,43 @@
 #include"Skiplist.h"
-void __global__ add(Node **sl,Node *n, int *latest){
-	int x=threadIdx.x+blockIdx.x*blockDim.x;
-	int first_read,second_read;
-	int new_latest=*latest+1;
-	do{
-		first_read=*latest;
-		//Call Insert
-		Insert(sl,n[x],first_read);
-		//Assert latest haven't been changed
-		second_read=atomicCAS((unsigned long long int*)latest,
-				*(unsigned long long int *)&first_read,
-				*(unsigned long long int *)&new_latest);
-	}while(first_read!=second_read); //If latest was been changed , rework.
+
+Node* test_Init(Node *sl,Node *n_arr,int N){
+	Init <<<1,80>>> (sl,n_arr,N);
+	return sl;
+}
+
+int main(){
+	int N=10;
+	Node* sl=(Node*)malloc(N*MAX_LEVEL*sizeof(Node));
+	Node* d_sl;
+	Node* n_arr=(Node*)malloc(N*sizeof(Node));
+	Node* d_n_arr;
+
+		for(int i=0 ; i<MAX_LEVEL*N ;i++){
+				sl[i].key=0;
+				sl[i].level=0;
+				sl[i].nextIdx=0;
+				sl[i].selfIdx=0;
+			}
+
+	srand(time(NULL));
+	for(int i=0;i<10;i++){
+		n_arr[i].key=i;
+		n_arr[i].level=rand()%8+1;
+	}
+
+
+	cudaMalloc(&d_sl,N*MAX_LEVEL*sizeof(Node));
+	cudaMalloc(&d_n_arr,N*sizeof(Node));
+	cudaMemcpy(d_sl,sl,N*MAX_LEVEL*sizeof(Node),cudaMemcpyHostToDevice);
+	cudaMemcpy(d_n_arr,n_arr,N*sizeof(Node),cudaMemcpyHostToDevice);
+	test_Init(d_sl,d_n_arr,N);
+	cudaMemcpy(sl,d_sl,N*MAX_LEVEL*sizeof(Node*),cudaMemcpyDeviceToHost);
+
+
+	for(int i=0 ; i<MAX_LEVEL*N ;i++){
+
+		printf("%d ",sl[i].key);
+		if(i%N==9)
+		printf("\n");
+	}
 }
