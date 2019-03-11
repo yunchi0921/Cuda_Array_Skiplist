@@ -16,7 +16,7 @@ struct Node{
 };
 
 void __global__ Init(Node *sl,Node *n,int N);
-
+void __global__ Connect(Node *sl,int N);
 
 
 #endif /* SKIPLIST_H_ */

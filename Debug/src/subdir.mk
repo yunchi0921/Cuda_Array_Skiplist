@@ -7,6 +7,10 @@ CU_SRCS += \
 ../src/Skiplist.cu \
 ../src/test.cu 
 
+O_SRCS += \
+../src/Skiplist.o \
+../src/test.o 
+
 OBJS += \
 ./src/Skiplist.o \
 ./src/test.o 

@@ -1,10 +1,13 @@
 #include"Skiplist.h"
 
 Node* test_Init(Node *sl,Node *n_arr,int N){
-	Init <<<1,80>>> (sl,n_arr,N);
+	Init <<<1,256>>> (sl,n_arr,N);
 	return sl;
 }
-
+Node* test_Connect(Node*sl,int N){
+	Connect<<<1,256>>>(sl,N);
+	return sl;
+}
 int main(){
 	int N=10;
 	Node* sl=(Node*)malloc(N*MAX_LEVEL*sizeof(Node));
@@ -31,13 +34,19 @@ int main(){
 	cudaMemcpy(d_sl,sl,N*MAX_LEVEL*sizeof(Node),cudaMemcpyHostToDevice);
 	cudaMemcpy(d_n_arr,n_arr,N*sizeof(Node),cudaMemcpyHostToDevice);
 	test_Init(d_sl,d_n_arr,N);
-	cudaMemcpy(sl,d_sl,N*MAX_LEVEL*sizeof(Node*),cudaMemcpyDeviceToHost);
+	test_Connect(d_sl,N);
+	cudaMemcpy(sl,d_sl,N*MAX_LEVEL*sizeof(Node),cudaMemcpyDeviceToHost);
 
 
 	for(int i=0 ; i<MAX_LEVEL*N ;i++){
 
 		printf("%d ",sl[i].key);
-		if(i%N==9)
+		if(i%N==N-1)
 		printf("\n");
+	}
+	for(int i=0 ;i<MAX_LEVEL*N;i++){
+		printf("%d ",sl[i].nextIdx%N);
+		if(i%N==N-1)
+			printf("\n");
 	}
 }
