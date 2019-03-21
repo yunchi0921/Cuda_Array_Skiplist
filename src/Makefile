@@ -1,13 +1,20 @@
-OPT=-O3
 
-all: test
+all: test_cpu test_gpu
 
-test: test.o Skiplist.o
-	nvcc $(OPT) -rdc=true -g -o $@ $^
+test_gpu: test.o Skiplist.o
+	nvcc -g -o $@ $^
+test_cpu: test_cpu.o Skiplist_cpu.o
+	nvcc -deviceemu -g -o $@ $^
 
 test.o: test.cu Skiplist.h Makefile
-	nvcc $(OPT) -rdc=true -g -c -o $@ $<
+	nvcc -g -c -o $@ $<
 Skiplist.o: Skiplist.cu Skiplist.h Makefile
-	nvcc $(OPT) -rdc=true -g -c -o $@ $<
+	nvcc -g -c -o $@ $<
 
+Skiplist_cpu.o: Skiplist.cu Skiplist.h Makefile
+	nvcc -deviceemu -g -c -o $@ $<
+test_cpu.o: test.cu Skiplist.h Makefile
+	nvcc -deviceemu -g -c -o $@ $<
+clean:
+	rm test.o test_* Skiplist.o Skiplist_*
 
