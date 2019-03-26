@@ -9,7 +9,7 @@ Node* test_Connect(Node*sl,int N){
 	return sl;
 }
 int main(){
-	int N=10;
+	int N=5;
 	Node* sl=(Node*)malloc(N*MAX_LEVEL*sizeof(Node));
 	Node* d_sl;
 	Node* n_arr=(Node*)malloc(N*sizeof(Node));
@@ -23,9 +23,9 @@ int main(){
 			}
 
 	srand(time(NULL));
-	for(int i=0;i<10;i++){
+	for(int i=0;i<N;i++){
 		n_arr[i].key=i;
-		n_arr[i].level=rand()%8+1;
+		n_arr[i].level=rand()%MAX_LEVEL+1;
 	}
 
 
