@@ -8,7 +8,7 @@
 #include <stdlib.h>
 #ifndef SKIPLIST_H_
 #define SKIPLIST_H_
-#define MAX_LEVEL 8
+#define MAX_LEVEL 4
 struct Node{
 	int key;
 	int nextIdx,selfIdx;
