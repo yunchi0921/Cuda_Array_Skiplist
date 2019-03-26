@@ -1,3 +1,5 @@
-# Cuda_Array_Skiplist
+# Cuda Skiplist
+---
+This is a project that test Skiplist using Cuda.
 
-It's a new method.Try to accelerate the constuction of Skiplist using GPU.
+It isn't really a Skiplist. It's a SkipArray. We will use `thrust sort` first , and construct node level and assign its value parallelly.
