@@ -1,11 +1,11 @@
 #include"Skiplist.h"
 
 Node* test_Init(Node *sl,Node *n_arr,int N){
-	Init <<<1,256>>> (sl,n_arr,N);
+	Init <<<1,20>>> (sl,n_arr,N);
 	return sl;
 }
 Node* test_Connect(Node*sl,int N){
-	Connect<<<1,256>>>(sl,N);
+	Connect<<<1,20>>>(sl,N);
 	return sl;
 }
 int main(){
@@ -49,4 +49,8 @@ int main(){
 		if(i%N==N-1)
 			printf("\n");
 	}
+	free(sl);
+	free(n_arr);
+	cudaFree(d_sl);
+	cudaFree(d_n_arr);
 }
