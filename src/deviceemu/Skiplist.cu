@@ -14,7 +14,7 @@
 /*Parallelize to Initial all elements of array*/
 void __global__ Init(Node *sl,Node *n_arr,int N){
 
-	int x =threadIdx.x;
+	int x =blockIdx.x*blockDim.x+threadIdx.x;
 
 	int level=n_arr[x%N].level;
 	if((x/N)<level)
@@ -24,7 +24,7 @@ void __global__ Init(Node *sl,Node *n_arr,int N){
 
 }
 void __global__ Connect(Node*sl,int N){
-	int x=threadIdx.x;
+	int x=blockIdx.x*blockDim.x+threadIdx.x;
 	 if(sl[x].key!=0 && x%N!=N-1){
 		 int i=0;
 		 do{

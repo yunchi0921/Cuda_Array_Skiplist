@@ -1,23 +1,23 @@
 #include"Skiplist.h"
 
 Node* test_Init(Node *sl,Node *n_arr,int N){
-	Init <<<1,20>>> (sl,n_arr,N);
+	Init <<<16,1024>>> (sl,n_arr,N);
 	return sl;
 }
 Node* test_Connect(Node*sl,int N){
-	Connect<<<1,20>>>(sl,N);
+	Connect<<<16,1024>>>(sl,N);
 	return sl;
 }
 int main(){
-	int N=5;
+	int N=4096;
 	Node* sl=(Node*)malloc(N*MAX_LEVEL*sizeof(Node));
 	Node* d_sl;
 	Node* n_arr=(Node*)malloc(N*sizeof(Node));
 	Node* d_n_arr;
-	//cudaEvent_t start,stop;
-	//float elapsedTime = 0.0;
-	//cudaEventCreate(&start);
-	//cudaEventCreate(&stop);
+	cudaEvent_t start,stop;
+	float elapsedTime = 0.0;
+	cudaEventCreate(&start);
+	cudaEventCreate(&stop);
 
 	for(int i=0 ; i<MAX_LEVEL*N ;i++){
 				sl[i].key=0;
@@ -34,18 +34,18 @@ int main(){
 
 	cudaMalloc(&d_sl,N*MAX_LEVEL*sizeof(Node));
 	cudaMalloc(&d_n_arr,N*sizeof(Node));
-	//counting time start
-	//cudaEventRecord(start,0);
+//	counting time start
+	cudaEventRecord(start,0);
 	cudaMemcpy(d_sl,sl,N*MAX_LEVEL*sizeof(Node),cudaMemcpyHostToDevice);
 	cudaMemcpy(d_n_arr,n_arr,N*sizeof(Node),cudaMemcpyHostToDevice);
 	test_Init(d_sl,d_n_arr,N);
 	test_Connect(d_sl,N);
 	cudaMemcpy(sl,d_sl,N*MAX_LEVEL*sizeof(Node),cudaMemcpyDeviceToHost);
-	//cudaEventRecord(stop,0);
-	//cudaEventSynchronize(stop);
-	//cudaEventElapsedTime(&elapsedTime,start,stop);
+	cudaEventRecord(stop,0);
+	cudaEventSynchronize(stop);
+	cudaEventElapsedTime(&elapsedTime,start,stop);
 
-	//printf("elapsedTime : %f\n",elapsedTime);
+	printf("elapsedTime : %f\n",elapsedTime);
 
 	for(int i=0 ; i<MAX_LEVEL*N ;i++){
 
