@@ -1,6 +1,4 @@
 #include"Skiplist.h"
-#include<iostream>
-using namespace std;
 #define BLOCKSIZE 512
 #define GRIDSIZE 65535
 Node* test_Init(Node *sl,Node *n_arr,int N){
