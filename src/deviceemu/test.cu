@@ -2,7 +2,7 @@
 #include<iostream>
 using namespace std;
 #define BLOCKSIZE 512
-#define GRIDSIZE 65535
+#define GRIDSIZE 8
 Node* test_Init(Node *sl,Node *n_arr,int N){
 	Init <<<GRIDSIZE,BLOCKSIZE>>> (sl,n_arr,N);
 	return sl;
@@ -24,50 +24,57 @@ struct timespec diff(timespec start, timespec end) {
 }
 
 int main(){
-	int N=BLOCKSIZE*GRIDSIZE/MAX_LEVEL;
-	Node* sl=(Node*)malloc(N*MAX_LEVEL*sizeof(Node));
+	int N;
+	Node* sl;
 	Node* d_sl;
-	Node* n_arr=(Node*)malloc(N*sizeof(Node));
+	Node* n_arr;
 	Node* d_n_arr;
 	struct timespec time1,time2;
 
-	for(int i=0 ; i<MAX_LEVEL*N ;i++){
-				sl[i].key=-1;
-				sl[i].level=0;
-				sl[i].nextIdx=-1;
-			}
 
-	srand(time(NULL));
-	for(int i=0;i<N;i++){
-		n_arr[i].key=i;
-		n_arr[i].level=rand()%MAX_LEVEL+1;
-	}
+	for(int size=1;size<GRIDSIZE;size<<=1){
+		//initializtion
+		N=BLOCKSIZE*size/MAX_LEVEL;
+		sl=(Node*)malloc(N*MAX_LEVEL*sizeof(Node));
+		n_arr=(Node*)malloc(N*sizeof(Node));
+		for(int i=0 ; i<MAX_LEVEL*N ;i++){
+					sl[i].key=-1;
+					sl[i].level=0;
+					sl[i].nextIdx=-1;
+				}
+
+		srand(time(NULL));
+		for(int i=0;i<N;i++){
+			n_arr[i].key=i;
+			n_arr[i].level=rand()%MAX_LEVEL+1;
+		}
 
 
-	cudaMalloc(&d_sl,N*MAX_LEVEL*sizeof(Node));
-	cudaMalloc(&d_n_arr,N*sizeof(Node));
+		cudaMalloc(&d_sl,N*MAX_LEVEL*sizeof(Node));
+		cudaMalloc(&d_n_arr,N*sizeof(Node));
 
-	clock_gettime(CLOCK_PROCESS_CPUTIME_ID,&time1);//timespec start
-	cudaMemcpy(d_sl,sl,N*MAX_LEVEL*sizeof(Node),cudaMemcpyHostToDevice);
-	cudaMemcpy(d_n_arr,n_arr,N*sizeof(Node),cudaMemcpyHostToDevice);
-	test_Init(d_sl,d_n_arr,N);
-	test_Connect(d_sl,N);
-	cudaMemcpy(sl,d_sl,N*MAX_LEVEL*sizeof(Node),cudaMemcpyDeviceToHost);
-	clock_gettime(CLOCK_PROCESS_CPUTIME_ID,&time2);//timespec stop
+		clock_gettime(CLOCK_PROCESS_CPUTIME_ID,&time1);//timespec start
+		cudaMemcpy(d_sl,sl,N*MAX_LEVEL*sizeof(Node),cudaMemcpyHostToDevice);
+		cudaMemcpy(d_n_arr,n_arr,N*sizeof(Node),cudaMemcpyHostToDevice);
+		test_Init(d_sl,d_n_arr,N);
+		test_Connect(d_sl,N);
+		cudaMemcpy(sl,d_sl,N*MAX_LEVEL*sizeof(Node),cudaMemcpyDeviceToHost);
+		clock_gettime(CLOCK_PROCESS_CPUTIME_ID,&time2);//timespec stop
 
-	printf("elapsedTime using timespec: %lld.%ld\n",(long long)diff(time1,time2).tv_sec,diff(time1,time2).tv_nsec);
-/*	printf("Skiplist node value:\n");
-	for(int i=0 ; i<MAX_LEVEL*N ;i++){
-		printf("%2d ",sl[i].key);
-		if(i%N==N-1)
-		printf("\n");
-	}
-	printf("Skiplist nextIdx:\n");
-	for(int i=0 ;i<MAX_LEVEL*N;i++){
-		printf("%2d ",sl[i].nextIdx%N);
-		if(i%N==N-1)
+		printf("Grid size = %2d elapsedTime using timespec: %lld.%lds\n",size,(long long)diff(time1,time2).tv_sec,diff(time1,time2).tv_nsec);
+		/*printf("Skiplist node value:\n");
+		for(int i=0 ; i<MAX_LEVEL*N ;i++){
+			printf("%2d ",sl[i].key);
+			if(i%N==N-1)
 			printf("\n");
-	}*/
+		}
+		printf("Skiplist nextIdx:\n");
+		for(int i=0 ;i<MAX_LEVEL*N;i++){
+			printf("%2d ",sl[i].nextIdx%N);
+			if(i%N==N-1)
+				printf("\n");
+		}*/
+	}
 	free(sl);
 	free(n_arr);
 	cudaFree(d_sl);
