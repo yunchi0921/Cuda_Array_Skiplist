@@ -32,17 +32,17 @@ if you want to see the result of the Skiplist , you can delete annotation before
 
 ```
 /*printf("Skiplist node value:\n");
-			for(int i=0 ; i<MAX_LEVEL*N ;i++){
-				printf("%2d ",sl[i].key);
-				if(i%N==N-1)
-				printf("\n");
-			}
-			printf("Skiplist nextIdx:\n");
-			for(int i=0 ;i<MAX_LEVEL*N;i++){
-				printf("%2d ",sl[i].nextIdx%N);
-				if(i%N==N-1)
-					printf("\n");
-			}*/
+for(int i=0 ; i<MAX_LEVEL*N ;i++){
+	printf("%2d ",sl[i].key);
+	if(i%N==N-1)
+	printf("\n");
+	}
+	printf("Skiplist nextIdx:\n");
+for(int i=0 ;i<MAX_LEVEL*N;i++){
+	printf("%2d ",sl[i].nextIdx%N);
+	if(i%N==N-1)
+	printf("\n");
+	}*/
 
 ```
 
