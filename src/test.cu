@@ -1,8 +1,7 @@
 #include"Skiplist.h"
-#include<iostream>
-using namespace std;
-#define BLOCKSIZE 512
-#define GRIDSIZE 8192
+
+#define BLOCKSIZE 1024
+#define GRIDSIZE 65536
 Node* test_Init(Node *sl,Node *n_arr,int N){
 	Init <<<GRIDSIZE,BLOCKSIZE>>> (sl,n_arr,N);
 	return sl;
@@ -44,7 +43,7 @@ int main(){
 	struct timespec time1,time2;
 	int loop;
 	struct timespec sum;
-	for(int size=1;size<=GRIDSIZE;size<<=1){
+	for(int size=GRIDSIZE;size<=GRIDSIZE;size<<=1){
 		//initializtion
 		N=BLOCKSIZE*size/MAX_LEVEL;
 		sl=(Node*)malloc(N*MAX_LEVEL*sizeof(Node));
@@ -55,7 +54,7 @@ int main(){
 					sl[i].key=-1;
 					sl[i].level=0;
 					sl[i].nextIdx=-1;
-				}
+		}
 
 		srand(time(NULL));
 		for(int i=0;i<N;i++){
@@ -86,7 +85,7 @@ int main(){
 					printf("\n");
 			}*/
 		}
-		printf("%d\t0.%.9ld\n",size,(sum.tv_sec*1000000000+sum.tv_nsec)/loop);
+		printf("%d\t%ld\n",size,(sum.tv_sec*1000000000+sum.tv_nsec)/loop);
 		free(sl);
 		free(n_arr);
 		cudaFree(d_sl);
