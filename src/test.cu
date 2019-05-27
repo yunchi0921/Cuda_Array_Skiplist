@@ -1,7 +1,7 @@
 #include"Skiplist.h"
-
+#include <thrust/sort.h>
 #define BLOCKSIZE 1024
-#define GRIDSIZE 65536
+#define GRIDSIZE 1024
 Node* test_Init(Node *sl,Node *n_arr,int N){
 	Init <<<GRIDSIZE,BLOCKSIZE>>> (sl,n_arr,N);
 	return sl;
@@ -9,6 +9,17 @@ Node* test_Init(Node *sl,Node *n_arr,int N){
 Node* test_Connect(Node*sl,int N){
 	Connect<<<GRIDSIZE,BLOCKSIZE>>>(sl,N);
 	return sl;
+}
+void shuffle(int *a,int n){
+	int i,j,tmp,T=1000;
+	while(T--)
+	{
+		i=rand()%n;
+		j=rand()%n;
+		tmp=a[i];
+		a[i]=a[j];
+		a[j]=tmp;
+	}
 }
 struct timespec diff(timespec start, timespec end) {
   struct timespec temp;
@@ -42,10 +53,22 @@ int main(){
 	Node* d_n_arr;
 	struct timespec time1,time2;
 	int loop;
+	
 	struct timespec sum;
 	for(int size=GRIDSIZE;size<=GRIDSIZE;size<<=1){
 		//initializtion
 		N=BLOCKSIZE*size/MAX_LEVEL;
+		int* input=(int*)malloc(N*sizeof(int));
+		for(int i=0;i<N;i++){
+			input[i]=i;
+		}
+		shuffle(input,N);//random the order
+		clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time1);
+		thrust::sort(input,input+N);//sorting
+		clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &time2);
+		struct timespec temp=diff(time1,time2);
+		double time_used=1000*(temp.tv_sec+(double)temp.tv_nsec/1000000000.0);
+		printf("Sorting time= %f\n",time_used);
 		sl=(Node*)malloc(N*MAX_LEVEL*sizeof(Node));
 		n_arr=(Node*)malloc(N*sizeof(Node));
 		cudaMalloc(&d_sl,N*MAX_LEVEL*sizeof(Node));
@@ -58,7 +81,7 @@ int main(){
 
 		srand(time(NULL));
 		for(int i=0;i<N;i++){
-			n_arr[i].key=i;
+			n_arr[i].key=input[i];
 			n_arr[i].level=rand()%MAX_LEVEL+1;
 		}
 
@@ -85,7 +108,7 @@ int main(){
 					printf("\n");
 			}*/
 		}
-		printf("%d\t%ld\n",size,(sum.tv_sec*1000000000+sum.tv_nsec)/loop);
+		printf("%d\t%ld\n",N,(sum.tv_sec*1000000000+sum.tv_nsec)/loop);
 		free(sl);
 		free(n_arr);
 		cudaFree(d_sl);
