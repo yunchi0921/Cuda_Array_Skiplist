@@ -1,0 +1,24 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+MAX_LEVEL	Skiplist.h	11;"	d
+MAX_LEVEL	deviceemu/Skiplist.h	11;"	d
+MAX_LEVEL	shared_version/Skiplist.h	11;"	d
+Node	Skiplist.h	/^struct Node{$/;"	s
+Node	deviceemu/Skiplist.h	/^struct Node{$/;"	s
+Node	shared_version/Skiplist.h	/^struct Node{$/;"	s
+SKIPLIST_H_	Skiplist.h	10;"	d
+SKIPLIST_H_	deviceemu/Skiplist.h	10;"	d
+SKIPLIST_H_	shared_version/Skiplist.h	10;"	d
+key	Skiplist.h	/^	int key;$/;"	m	struct:Node
+key	deviceemu/Skiplist.h	/^	int key;$/;"	m	struct:Node
+key	shared_version/Skiplist.h	/^	int key;$/;"	m	struct:Node
+level	Skiplist.h	/^	int level;$/;"	m	struct:Node
+level	deviceemu/Skiplist.h	/^	int level;$/;"	m	struct:Node
+level	shared_version/Skiplist.h	/^	int level;$/;"	m	struct:Node
+nextIdx	Skiplist.h	/^	int nextIdx;$/;"	m	struct:Node
+nextIdx	deviceemu/Skiplist.h	/^	int nextIdx;$/;"	m	struct:Node
+nextIdx	shared_version/Skiplist.h	/^	int nextIdx;$/;"	m	struct:Node
