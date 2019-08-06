@@ -20,6 +20,7 @@ void __global__ Init(Node *sl, int N) {
 	for(int i=0;i<level;i++){
 			sl[g+N*i].key = shared_level_zero[x].key;
 	}
+	
 }
 void __global__ Connect(Node*sl, int N) {
 	int g=blockIdx.x*blockDim.x+threadIdx.x;
@@ -35,5 +36,6 @@ void __global__ Connect(Node*sl, int N) {
 			sl[g+N*i].nextIdx=g+step;
 		}
 	}
+	
 }
 
